@@ -38,6 +38,7 @@ public class ventanaPaint extends javax.swing.JFrame {
     public void paint(Graphics g){
         super.paint(g);
         
+        //pinto el buffer sobre el JFrame
     }
     /**
      * This method is called from within the constructor to initialize the form.
