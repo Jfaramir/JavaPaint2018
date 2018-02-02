@@ -8,6 +8,7 @@ package codigo;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
 
 /**
@@ -16,6 +17,8 @@ import java.awt.image.BufferedImage;
  */
 public class ventanaPaint extends javax.swing.JFrame {
     BufferedImage buffer = null;
+    Ellipse2D.Double auxiliar;
+    
     /**
      * Creates new form ventanaPaint
      */
@@ -30,7 +33,7 @@ public class ventanaPaint extends javax.swing.JFrame {
         //creo una imagen modificable
         Graphics2D g2 = buffer.createGraphics();
         //inicializa el buffer para que sea unrectangulo rojo q ocupe todo el Jpanel
-        g2.setColor(Color.red);
+        g2.setColor(Color.white);
         g2.fillRect(0, 0, buffer.getWidth(), buffer.getHeight());
     }
     
@@ -39,6 +42,12 @@ public class ventanaPaint extends javax.swing.JFrame {
         super.paint(g);
         
         //pinto el buffer sobre el JFrame
+        //primero creo una variable que apunta al sitio q quiero pintar
+//        Graphics2D g2 =(Graphics2D) jPanel1.getGraphics();
+//        g2.drawImage(buffer, 0, 0, null);
+        
+        
+        
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -53,15 +62,26 @@ public class ventanaPaint extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        jPanel1.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseDragged(java.awt.event.MouseEvent evt) {
+                jPanel1MouseDragged(evt);
+            }
+        });
+        jPanel1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                jPanel1MousePressed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 508, Short.MAX_VALUE)
+            .addGap(0, 537, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 334, Short.MAX_VALUE)
+            .addGap(0, 540, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -83,6 +103,32 @@ public class ventanaPaint extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jPanel1MouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel1MouseDragged
+        
+        // primero apuntamos al buffer para dibujar sobre el
+        Graphics2D g2 = (Graphics2D) buffer.getGraphics();
+        //borro lo que hubiera pintado en el lienzo
+        g2.setColor(Color.white);
+        g2.fillRect(0, 0, buffer.getWidth(), buffer.getHeight());
+        
+        int radio = Math.abs( (int) auxiliar.x - evt.getX());
+        auxiliar.width = radio;
+        auxiliar.height = radio;
+        g2.setColor(Color.black);
+        g2.fill(auxiliar);
+        
+        g2 = (Graphics2D) jPanel1.getGraphics();
+        g2.drawImage(buffer, 0, 0, null);
+        repaint(0, 0, 1, 1);
+        
+    }//GEN-LAST:event_jPanel1MouseDragged
+
+    private void jPanel1MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel1MousePressed
+        // inicializo la elipse q usare para dibujar en el buffer
+        auxiliar = new Ellipse2D.Double(evt.getX(), evt.getY(), 1, 1);
+        
+    }//GEN-LAST:event_jPanel1MousePressed
 
     /**
      * @param args the command line arguments
